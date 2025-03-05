@@ -11,7 +11,14 @@ app.get("/admin/getAllData", (req, res) => {
 });
 
 app.get("/user", userAuth, (req, res) => {
+	throw new Error("Error");
 	res.send("User data sent");
+});
+
+app.use("/", (err, req, res, next) => {
+	if (err) {
+		res.status(500).send("Something went wrong");
+	}
 });
 
 app.listen(3000, () => {
