@@ -2,9 +2,16 @@ const express = require("express");
 
 const app = express();
 
-app.get("/user/:userId/:name/:password", (req, res) => {
-	console.log(req.params);
-	res.send({ firstName: "Aadil", lastName: "Rehman" });
+const { adminAuth, userAuth } = require("./middlewares/auth");
+
+app.use("/admin", adminAuth);
+
+app.get("/admin/getAllData", (req, res) => {
+	res.send("All data sent");
+});
+
+app.get("/user", userAuth, (req, res) => {
+	res.send("User data sent");
 });
 
 app.listen(3000, () => {
