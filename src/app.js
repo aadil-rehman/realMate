@@ -1,26 +1,36 @@
 const express = require("express");
-
+const mongoDBconnect = require("./config/database");
 const app = express();
+const User = require("./models/user");
 
-const { adminAuth, userAuth } = require("./middlewares/auth");
+// Middleware to parse JSON request body
+app.use(express.json());
 
-app.use("/admin", adminAuth);
+app.post("/signUp", (req, res) => {
+	const userObj = {
+		firstName: req.body.firstName,
+		lastName: req.body.lastName,
+		emailId: req.body.emailId,
+		password: req.body.password,
+	};
 
-app.get("/admin/getAllData", (req, res) => {
-	res.send("All data sent");
-});
+	const user = new User(userObj);
 
-app.get("/user", userAuth, (req, res) => {
-	throw new Error("Error");
-	res.send("User data sent");
-});
-
-app.use("/", (err, req, res, next) => {
-	if (err) {
-		res.status(500).send("Something went wrong");
+	try {
+		user.save();
+		res.send("User Added Successfully");
+	} catch (err) {
+		res.status(400).send("Error in savibg the user:" + err.message);
 	}
 });
 
-app.listen(3000, () => {
-	console.log("Server is listening on port 3000...");
-});
+mongoDBconnect()
+	.then(() => {
+		console.log("Database connection established");
+		app.listen(3000, () => {
+			console.log("Server is listening on port 3000...");
+		});
+	})
+	.catch(() => {
+		console.log("Database cannot be connected");
+	});
