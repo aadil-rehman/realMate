@@ -6,14 +6,9 @@ const User = require("./models/user");
 // Middleware to parse JSON request body
 app.use(express.json());
 
+//User signup
 app.post("/signUp", (req, res) => {
-	const userObj = {
-		firstName: req.body.firstName,
-		lastName: req.body.lastName,
-		emailId: req.body.emailId,
-		password: req.body.password,
-	};
-
+	const userObj = req.body;
 	const user = new User(userObj);
 
 	try {
@@ -21,6 +16,32 @@ app.post("/signUp", (req, res) => {
 		res.send("User Added Successfully");
 	} catch (err) {
 		res.status(400).send("Error in savibg the user:" + err.message);
+	}
+});
+
+//get user by mail
+app.get("/user", async (req, res) => {
+	const userEmail = req.body.emailId;
+	try {
+		const user = await User.findOne({ emailId: userEmail });
+
+		if (!user) {
+			res.send("User not found");
+		} else {
+			res.send(user);
+		}
+	} catch (err) {
+		res.status(400).send("Something went wrong");
+	}
+});
+
+//Feed api - get All teh users
+app.get("/feed", async (req, res) => {
+	try {
+		const users = await User.find({});
+		res.send(users);
+	} catch (err) {
+		res.status(400).send("Something went wrong");
 	}
 });
 
