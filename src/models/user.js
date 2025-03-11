@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const validator = require("validator");
 
 const userSchema = new mongoose.Schema(
 	{
@@ -15,6 +16,11 @@ const userSchema = new mongoose.Schema(
 			lowercase: true,
 			unique: true,
 			trim: true,
+			validate(value) {
+				if (!validator.isEmail(value)) {
+					throw new Error("Invalid email address: " + value);
+				}
+			},
 		},
 		password: {
 			type: String,
@@ -34,6 +40,9 @@ const userSchema = new mongoose.Schema(
 		about: {
 			type: String,
 			default: "This is default about user",
+		},
+		skills: {
+			type: [String],
 		},
 	},
 	{ timestamps: true } //createdAt and updatedAt timing will appear automatically by using this

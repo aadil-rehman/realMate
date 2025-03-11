@@ -66,7 +66,27 @@ app.patch("/user", async (req, res) => {
 	if (!userId) {
 		return res.status(400).send("User ID is required.");
 	}
+
+	const ALLOWED_UPDATES = [
+		"password",
+		"age",
+		"gender",
+		"about",
+		"lastName",
+		"_id",
+		"skills",
+	];
+
 	try {
+		const isUpdateAllowed = Object.keys(data).every((key) =>
+			ALLOWED_UPDATES.includes(key)
+		);
+		if (!isUpdateAllowed) {
+			throw new Error("Update not allowed");
+		}
+		if (data?.skills.length > 10) {
+			throw new Error("Skills can not be more than 10");
+		}
 		const user = await User.findByIdAndUpdate(userId, data, {
 			new: true,
 			runValidators: true, //to run the validators applied in schemas in each patch update
