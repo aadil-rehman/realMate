@@ -7,8 +7,14 @@ const bcrypt = require("bcrypt");
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
 const { userAuth } = require("./middlewares/auth");
+const cors = require("cors");
 
-// Middleware to parse JSON request body
+app.use(
+	cors({
+		origin: "http://localhost:5173",
+		credentials: true,
+	})
+);
 app.use(express.json());
 app.use(cookieParser());
 
