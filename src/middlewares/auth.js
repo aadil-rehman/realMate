@@ -7,7 +7,7 @@ const userAuth = async (req, res, next) => {
 		const { token } = req.cookies;
 
 		if (!token) {
-			throw new Error("Token is not valid!!!!!");
+			return res.status(401).json({ Error: "Please login" });
 		}
 
 		//validate token
@@ -28,6 +28,4 @@ const userAuth = async (req, res, next) => {
 	}
 };
 
-module.exports = {
-	userAuth,
-};
+module.exports = { userAuth };

@@ -26,7 +26,7 @@ userRouter.get("/user/request", userAuth, async (req, res) => {
 
 		// const data = connectionRequest.map((row) => row.fromUserId);
 
-		res.json({ message: "Data fetched successfully", connectionRequest });
+		res.json({ message: "Data fetched successfully", data: connectionRequest });
 	} catch (err) {
 		res.status(400).json({ ERROR: err.message });
 	}
