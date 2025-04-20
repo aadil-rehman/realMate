@@ -28,7 +28,7 @@ cron.schedule("0 8 * * *", async () => {
 		if (listOfEmails.length === 0) return;
 		for (const email of listOfEmails) {
 			try {
-				const res = await sendEmail.run("", email);
+				const res = await sendEmail.run("Someone", email);
 				console.log(res);
 			} catch (err) {
 				console.error(err);
