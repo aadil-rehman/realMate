@@ -2,6 +2,7 @@ const express = require("express");
 const { userAuth } = require("../middlewares/auth");
 const ConnectionRequest = require("../models/connectionRequest");
 const User = require("../models/user");
+const sendEmail = require("../utils/sendEmail");
 
 const requestRouter = express.Router();
 
@@ -50,6 +51,15 @@ requestRouter.post(
 					.json({ message: "Connection request already exists!!" });
 			}
 			const data = await connectionRequest.save();
+
+			console.log(fromUserId.firstname);
+
+			const emailRes = await sendEmail.run(
+				req.user.firstName + " " + req.user.lastName,
+				toUser.firstName
+			);
+
+			console.log(emailRes);
 			res.json({ message: "Connection request sent successfully.", data });
 		} catch (err) {
 			res.status(400).json({ ERROR: err.message });
