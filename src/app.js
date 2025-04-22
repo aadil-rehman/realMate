@@ -22,12 +22,18 @@ const profileRouter = require("./routes/profile");
 const requestRouter = require("./routes/request");
 const userRouter = require("./routes/user");
 const uploadRouter = require("./routes/upload");
+const blogRouter = require("./routes/blogs");
+const commentsRouter = require("./routes/comments");
+const likesRouter = require("./routes/likes");
 
 app.use("/", authRouter);
-app.use("/", profileRouter);
-app.use("/", requestRouter);
-app.use("/", userRouter);
+app.use("/profile", profileRouter);
+app.use("/request", requestRouter);
+app.use("/user", userRouter);
 app.use("/image", uploadRouter);
+app.use("/blog", blogRouter);
+app.use("/comments", commentsRouter);
+app.use("/likes", likesRouter);
 
 mongoDBconnect()
 	.then(() => {

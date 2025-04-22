@@ -3,10 +3,11 @@ const { userAuth } = require("../middlewares/auth");
 const { validateEditProfileData } = require("../utils/validations");
 const bcrypt = require("bcrypt");
 const validator = require("validator");
+const cloudinary = require("../config/cloudinary");
 
 const profileRouter = express.Router();
 
-profileRouter.get("/profile/view", userAuth, async (req, res) => {
+profileRouter.get("/view", userAuth, async (req, res) => {
 	try {
 		const user = req.user;
 		res.send(user);
@@ -15,7 +16,7 @@ profileRouter.get("/profile/view", userAuth, async (req, res) => {
 	}
 });
 
-profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
+profileRouter.patch("/edit", userAuth, async (req, res) => {
 	try {
 		if (!validateEditProfileData(req)) {
 			throw new Error("Invalid edit request");
@@ -23,6 +24,15 @@ profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
 
 		const loggedinUser = req.user;
 
+		if (
+			req.body.profileImage &&
+			req.body.profileImage.public_id &&
+			loggedinUser.profileImage?.public_id &&
+			loggedinUser.profileImage.public_id !== req.body.profileImage.public_id
+		) {
+			// Delete the previous image from Cloudinary
+			await cloudinary.uploader.destroy(loggedinUser.profileImage.public_id);
+		}
 		Object.keys(req.body).forEach((key) => (loggedinUser[key] = req.body[key]));
 
 		await loggedinUser.save();
@@ -36,7 +46,7 @@ profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
 	}
 });
 
-profileRouter.patch("/profile/password", userAuth, async (req, res) => {
+profileRouter.patch("/password", userAuth, async (req, res) => {
 	try {
 		//validate curr passwod
 		const { currentPassword, newPassword } = req.body;

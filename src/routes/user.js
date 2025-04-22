@@ -16,7 +16,7 @@ const USER_SAFE_DATA = [
 ];
 
 //get all the pending connection requests for the loggedin user
-userRouter.get("/user/request", userAuth, async (req, res) => {
+userRouter.get("/request", userAuth, async (req, res) => {
 	try {
 		const loggedinUser = req.user;
 		const connectionRequest = await ConnectionRequest.find({
@@ -32,7 +32,7 @@ userRouter.get("/user/request", userAuth, async (req, res) => {
 	}
 });
 
-userRouter.get("/user/connections", userAuth, async (req, res) => {
+userRouter.get("/connections", userAuth, async (req, res) => {
 	try {
 		const loggedinUser = req.user;
 		const connectionRequest = await ConnectionRequest.find({
@@ -59,7 +59,7 @@ userRouter.get("/user/connections", userAuth, async (req, res) => {
 	}
 });
 
-userRouter.get("/user/feed", userAuth, async (req, res) => {
+userRouter.get("/feed", userAuth, async (req, res) => {
 	try {
 		const loggedinUser = req.user;
 
