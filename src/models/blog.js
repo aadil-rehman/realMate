@@ -16,6 +16,7 @@ const blogSchema = new mongoose.Schema(
 			public_id: String,
 			url: {
 				type: String,
+				required: true,
 				default:
 					"https://th.bing.com/th/id/OIP.E13JkGWNBoKw9e1-WatrCgHaD_?rs=1&pid=ImgDetMain",
 			},
