@@ -11,7 +11,7 @@ const USER_SAFE_DATA = [
 	"age",
 	"gender",
 	"about",
-	"photoUrl",
+	"profileImage",
 	"skills",
 ];
 

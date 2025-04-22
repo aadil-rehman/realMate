@@ -18,7 +18,7 @@ const validateEditProfileData = (req) => {
 		"gender",
 		"about",
 		"skills",
-		"photoUrl",
+		"profileImage",
 	];
 
 	const isEditAllwoed = Object.keys(req.body).every((field) =>

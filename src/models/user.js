@@ -35,6 +35,7 @@ const userSchema = new mongoose.Schema(
 		},
 		gender: {
 			type: String,
+			required: true,
 			validate(value) {
 				if (!["male", "female", "other"].includes(value)) {
 					throw new Error("Gender data is not valid");
@@ -45,14 +46,19 @@ const userSchema = new mongoose.Schema(
 			type: String,
 			default: "This is default about user",
 		},
-		photoUrl: {
-			type: String,
-			default:
-				"https://www.dgvaishnavcollege.edu.in/dgvaishnav-c/uploads/2021/01/dummy-profile-pic.jpg",
-			valdiate(value) {
-				if (validator.isURL(value)) {
-					throw new Error("Invalid photo Url: " + value);
-				}
+		profileImage: {
+			public_id: {
+				type: String,
+			},
+			url: {
+				type: String,
+				default:
+					"https://www.inklar.com/wp-content/uploads/2020/05/dummy_user-370x300-1.png",
+				validate(value) {
+					if (!validator.isURL(value)) {
+						throw new Error("Invalid photo URL: " + value);
+					}
+				},
 			},
 		},
 		skills: {

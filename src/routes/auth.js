@@ -10,22 +10,27 @@ authRouter.post("/signUp", async (req, res) => {
 		//validate the data
 		validateSignUpData(req);
 
-		const { firstName, lastName, emailId, password } = req.body;
+		const { firstName, lastName, emailId, password, gender } = req.body;
 
 		//Enrcypt the password
 		const passwordHash = await bcrypt.hash(password, 10);
-		console.log(passwordHash);
 
 		const user = new User({
 			firstName,
 			lastName,
 			emailId,
 			password: passwordHash,
+			gender,
+			...(req.body.age !== "" ? { age: req.body.age } : {}),
+			...(req.body.about !== "" ? { about: req.body.about } : {}),
+			...(req.body.profileImage && Object.keys(req.body.profileImage).length
+				? { profileImage: req.body.profileImage }
+				: {}),
 		});
 
 		//saving the user
 		await user.save();
-		res.send("User Added Successfully");
+		res.json({ status: 1, message: "User Added Successfully" });
 	} catch (err) {
 		res.status(400).send("Error in savibg the user:" + err.message);
 	}
