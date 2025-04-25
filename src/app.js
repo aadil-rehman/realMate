@@ -26,6 +26,7 @@ const uploadRouter = require("./routes/upload");
 const blogRouter = require("./routes/blogs");
 const commentsRouter = require("./routes/comments");
 const likesRouter = require("./routes/likes");
+const chatRouter = require("./routes/chat");
 const initializeSocket = require("./utils/socket");
 
 app.use("/", authRouter);
@@ -36,6 +37,7 @@ app.use("/image", uploadRouter);
 app.use("/blog", blogRouter);
 app.use("/comments", commentsRouter);
 app.use("/likes", likesRouter);
+app.use("/chat", chatRouter);
 
 const server = http.createServer(app);
 

@@ -23,7 +23,7 @@ const chatSchema = new mongoose.Schema({
 			required: true,
 		},
 	],
-	chat: [messagesSchema],
+	messages: [messagesSchema],
 });
 
 const Chat = mongoose.model("Chat", chatSchema);
