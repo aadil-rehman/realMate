@@ -3,6 +3,7 @@ const express = require("express");
 const mongoDBconnect = require("./config/database");
 const app = express();
 const cookieParser = require("cookie-parser");
+const http = require("http");
 
 const cors = require("cors");
 
@@ -25,6 +26,7 @@ const uploadRouter = require("./routes/upload");
 const blogRouter = require("./routes/blogs");
 const commentsRouter = require("./routes/comments");
 const likesRouter = require("./routes/likes");
+const initializeSocket = require("./utils/socket");
 
 app.use("/", authRouter);
 app.use("/profile", profileRouter);
@@ -35,10 +37,14 @@ app.use("/blog", blogRouter);
 app.use("/comments", commentsRouter);
 app.use("/likes", likesRouter);
 
+const server = http.createServer(app);
+
+initializeSocket(server);
+
 mongoDBconnect()
 	.then(() => {
 		console.log("Database connection established");
-		app.listen(3000, () => {
+		server.listen(3000, () => {
 			console.log("Server is listening on port 3000...");
 		});
 	})
