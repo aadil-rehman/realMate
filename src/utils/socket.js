@@ -18,6 +18,8 @@ const initializeSocket = (server) => {
 		},
 	});
 
+	const onlineUsers = new Map();
+
 	io.on("connection", (socket) => {
 		const token = socket.handshake.auth?.token;
 
@@ -31,10 +33,21 @@ const initializeSocket = (server) => {
 			return socket.disconnect(true);
 		}
 
-		socket.on("joinChat", ({ userId, targetUserId, firstName, lastName }) => {
+		//save user as online
+
+		socket.on("joinChat", ({ userId, targetUserId, firstName }) => {
 			const roomId = getSecretRoomId(userId, targetUserId);
 			console.log(firstName + ": Joining room: " + roomId);
 			socket.join(roomId);
+
+			socket.userId = userId; // <-- save userId on socket itself
+			onlineUsers.set(userId, socket.id);
+			console.log(onlineUsers);
+		});
+
+		socket.on("checkonline", (targetUserId) => {
+			const isOnline = onlineUsers.has(targetUserId);
+			socket.emit("userOnlineStatus", isOnline);
 		});
 
 		socket.on(
@@ -46,6 +59,7 @@ const initializeSocket = (server) => {
 				userId,
 				targetUserId,
 				text,
+				createdAt,
 			}) => {
 				try {
 					const roomId = getSecretRoomId(userId, targetUserId);
@@ -95,6 +109,7 @@ const initializeSocket = (server) => {
 						lastName,
 						profileImage,
 						text,
+						createdAt,
 					});
 				} catch (err) {
 					console.log(err);
@@ -102,7 +117,14 @@ const initializeSocket = (server) => {
 			}
 		);
 
-		socket.on("disconnect", () => {});
+		console.log(onlineUsers);
+
+		socket.on("disconnect", () => {
+			if (socket.userId) {
+				console.log("User disconnected:", socket.userId);
+				onlineUsers.delete(socket.userId);
+			}
+		});
 	});
 };
 
