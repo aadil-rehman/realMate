@@ -45,6 +45,7 @@ blogRouter.get("/view/:blogId", userAuth, async (req, res) => {
 	}
 });
 
+//My blog list
 blogRouter.get("/list", userAuth, async (req, res) => {
 	try {
 		const loggedInUser = req.user;
@@ -59,6 +60,7 @@ blogRouter.get("/list", userAuth, async (req, res) => {
 	}
 });
 
+//Blog feed
 blogRouter.get("/feed", userAuth, async (req, res) => {
 	try {
 		const loggedInUser = req.user;
@@ -83,6 +85,21 @@ blogRouter.get("/feed", userAuth, async (req, res) => {
 		);
 
 		res.json({ message: "Blogs fecthed successfully!", data: blogsWithLikes });
+	} catch (err) {
+		res.status(400).json({ Error: err.message });
+	}
+});
+
+//Blog list of user of userId
+blogRouter.get("/list/:userId", userAuth, async (req, res) => {
+	try {
+		const userId = req.params.userId;
+		const blogs = await Blog.find({ authorId: userId }).populate(
+			"authorId",
+			"firstName lastName"
+		);
+
+		res.json({ message: "Blogs fecthed successfully!", data: blogs });
 	} catch (err) {
 		res.status(400).json({ Error: err.message });
 	}

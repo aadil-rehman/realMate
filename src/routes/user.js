@@ -100,4 +100,16 @@ userRouter.get("/feed", userAuth, async (req, res) => {
 	}
 });
 
+userRouter.get("/profile/:userId", userAuth, async (req, res) => {
+	try {
+		const userId = req.params.userId;
+
+		const user = await User.findOne({ _id: userId }).select(
+			"firstName lastName profileImage"
+		);
+		res.json(user);
+	} catch (err) {
+		res.status(400).send("ERROR: " + err.message);
+	}
+});
 module.exports = userRouter;
